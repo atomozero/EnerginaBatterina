@@ -1,0 +1,82 @@
+progetto:
+  nome: "Test Pipeline"
+
+meteo:
+  localita:
+    latitudine: 41.9028
+    longitudine: 12.4964
+    altitudine: 21
+    nome: "Roma"
+  sorgente_dati: "sintetico"
+  anno: 2023
+
+fotovoltaico:
+  impianto:
+    potenza_nominale_kwp: 6.0
+    inclinazione_gradi: 30
+    azimut_gradi: 180
+    perdite_sistema_pct: 14.0
+    degradazione_annua_pct: 0.5
+
+pun:
+  zona_mercato: "CSUD"
+  anno: 2023
+  tariffa_acquisto:
+    tipo: "pun_indicizzata"
+    oneri_sistema_eur_kwh: 0.08
+    accise_eur_kwh: 0.0227
+    iva_pct: 10.0
+  tariffa_vendita:
+    prezzo_minimo_garantito_eur_kwh: 0.04
+
+edificio:
+  tipologia: "residenziale"
+  parametri:
+    superficie_mq: 120
+    n_occupanti: 4
+
+batteria:
+  abilitata: true
+  specifiche:
+    capacita_nominale_kwh: 10.0
+    potenza_max_kw: 5.0
+    chimica: "LFP"
+  strategia: "autoconsumo"
+
+incentivi:
+  detrazione_fiscale:
+    abilitata: true
+    aliquota_pct: 50.0
+    anni_detrazione: 10
+  ritiro_dedicato:
+    abilitato: true
+
+economico:
+  investimento:
+    costo_pv_eur: 9000
+    costo_batteria_eur: 6000
+    costo_installazione_eur: 2000
+    costo_progettazione_eur: 500
+  costi_esercizio:
+    manutenzione_annua_eur: 200
+    assicurazione_annua_eur: 100
+    sostituzione_inverter_anno: 12
+    costo_inverter_eur: 1500
+  parametri:
+    tasso_sconto_pct: 5.0
+    vita_utile_anni: 25
+
+previsione:
+  orizzonte_anni: 25
+  metodo_prezzi: "trend_lineare"
+  metodo_produzione: "degradazione"
+
+sensibilita:
+  variabili:
+    - nome: "costo_pv_eur"
+      min_pct: -20
+      max_pct: 20
+      passi: 3
+
+report:
+  formato: "pdf"
