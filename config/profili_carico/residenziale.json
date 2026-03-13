@@ -1,0 +1,48 @@
+{
+  "tipologia": "residenziale",
+  "descrizione": "Profilo consumo domestico tipico italiano",
+  "consumo_base_annuo_kwh": 1800,
+  "nota": "ISTAT media famiglia italiana ~2700 kWh/anno, di cui ~1800 base + HVAC variabile",
+  "profilo_giornaliero_normalizzato": {
+    "descrizione": "Distribuzione oraria del carico base (somma=1.0)",
+    "feriale": [
+      0.020, 0.015, 0.012, 0.012, 0.012, 0.015,
+      0.030, 0.065, 0.060, 0.040, 0.035, 0.035,
+      0.055, 0.060, 0.040, 0.035, 0.035, 0.045,
+      0.065, 0.080, 0.085, 0.075, 0.055, 0.030
+    ],
+    "festivo": [
+      0.020, 0.015, 0.012, 0.012, 0.012, 0.012,
+      0.020, 0.040, 0.060, 0.065, 0.065, 0.065,
+      0.070, 0.055, 0.045, 0.040, 0.040, 0.050,
+      0.060, 0.070, 0.075, 0.070, 0.055, 0.030
+    ]
+  },
+  "fattori_mensili": {
+    "descrizione": "Fattore moltiplicativo mensile per stagionalita carico base",
+    "valori": [1.05, 0.95, 0.90, 0.85, 0.85, 0.90, 0.95, 0.95, 0.90, 0.95, 1.00, 1.10]
+  },
+  "elettrodomestici": {
+    "descrizione": "Potenze tipiche per calcolo bottom-up",
+    "frigorifero_w": 100,
+    "lavatrice_w": 2000,
+    "lavastoviglie_w": 1800,
+    "forno_w": 2000,
+    "piano_cottura_induzione_w": 3000,
+    "tv_w": 100,
+    "illuminazione_w": 200,
+    "standby_w": 50
+  },
+  "hvac": {
+    "riscaldamento": {
+      "temperatura_setpoint_c": 20,
+      "potenza_termica_kw_per_mq": 0.04,
+      "nota": "Per pompa di calore, dividere per COP"
+    },
+    "raffrescamento": {
+      "temperatura_setpoint_c": 26,
+      "potenza_frigorifera_kw_per_mq": 0.03,
+      "nota": "Per condizionatore, dividere per EER"
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "moduli": [
+    {
+      "produttore": "Generic",
+      "modello": "Mono400",
+      "tecnologia": "monocristallino",
+      "potenza_wp": 400,
+      "efficienza_pct": 20.5,
+      "voc_v": 41.5,
+      "isc_a": 12.3,
+      "vmp_v": 34.5,
+      "imp_a": 11.6,
+      "coeff_temp_pmax_pct_c": -0.35,
+      "coeff_temp_voc_pct_c": -0.27,
+      "coeff_temp_isc_pct_c": 0.05,
+      "noct_c": 45,
+      "area_mq": 1.95,
+      "peso_kg": 21.0
+    },
+    {
+      "produttore": "Generic",
+      "modello": "Mono500",
+      "tecnologia": "monocristallino",
+      "potenza_wp": 500,
+      "efficienza_pct": 21.5,
+      "voc_v": 51.8,
+      "isc_a": 12.5,
+      "vmp_v": 43.2,
+      "imp_a": 11.6,
+      "coeff_temp_pmax_pct_c": -0.34,
+      "coeff_temp_voc_pct_c": -0.25,
+      "coeff_temp_isc_pct_c": 0.05,
+      "noct_c": 44,
+      "area_mq": 2.33,
+      "peso_kg": 25.0
+    },
+    {
+      "produttore": "Generic",
+      "modello": "Poly330",
+      "tecnologia": "policristallino",
+      "potenza_wp": 330,
+      "efficienza_pct": 17.0,
+      "voc_v": 40.0,
+      "isc_a": 10.8,
+      "vmp_v": 33.5,
+      "imp_a": 9.85,
+      "coeff_temp_pmax_pct_c": -0.40,
+      "coeff_temp_voc_pct_c": -0.30,
+      "coeff_temp_isc_pct_c": 0.06,
+      "noct_c": 46,
+      "area_mq": 1.94,
+      "peso_kg": 22.0
+    }
+  ]
+}

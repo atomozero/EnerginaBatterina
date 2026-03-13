@@ -1,0 +1,55 @@
+{
+  "batterie": [
+    {
+      "produttore": "Generic",
+      "modello": "LFP_10",
+      "chimica": "LFP",
+      "capacita_nominale_kwh": 10.0,
+      "potenza_max_carica_kw": 5.0,
+      "potenza_max_scarica_kw": 5.0,
+      "efficienza_roundtrip_pct": 92.0,
+      "soc_min_pct": 10.0,
+      "soc_max_pct": 90.0,
+      "cicli_vita_80pct": 6000,
+      "garanzia_anni": 10,
+      "temperatura_operativa_min_c": -10,
+      "temperatura_operativa_max_c": 50,
+      "autodiscarica_pct_mese": 2.0,
+      "peso_kg": 110
+    },
+    {
+      "produttore": "Generic",
+      "modello": "LFP_5",
+      "chimica": "LFP",
+      "capacita_nominale_kwh": 5.0,
+      "potenza_max_carica_kw": 2.5,
+      "potenza_max_scarica_kw": 2.5,
+      "efficienza_roundtrip_pct": 92.0,
+      "soc_min_pct": 10.0,
+      "soc_max_pct": 90.0,
+      "cicli_vita_80pct": 6000,
+      "garanzia_anni": 10,
+      "temperatura_operativa_min_c": -10,
+      "temperatura_operativa_max_c": 50,
+      "autodiscarica_pct_mese": 2.0,
+      "peso_kg": 60
+    },
+    {
+      "produttore": "Generic",
+      "modello": "NMC_10",
+      "chimica": "NMC",
+      "capacita_nominale_kwh": 10.0,
+      "potenza_max_carica_kw": 5.0,
+      "potenza_max_scarica_kw": 5.0,
+      "efficienza_roundtrip_pct": 90.0,
+      "soc_min_pct": 10.0,
+      "soc_max_pct": 90.0,
+      "cicli_vita_80pct": 4000,
+      "garanzia_anni": 10,
+      "temperatura_operativa_min_c": -10,
+      "temperatura_operativa_max_c": 45,
+      "autodiscarica_pct_mese": 3.0,
+      "peso_kg": 95
+    }
+  ]
+}

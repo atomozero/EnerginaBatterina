@@ -1,0 +1,47 @@
+progetto:
+  nome: "Impianto Industriale Milano"
+  descrizione: "Capannone 2000mq, PV 100kWp + batteria 200kWh"
+
+meteo:
+  localita:
+    latitudine: 45.4642
+    longitudine: 9.1900
+    altitudine: 122
+    nome: "Milano"
+  sorgente_dati: "pvgis_tmy"
+
+fotovoltaico:
+  impianto:
+    potenza_nominale_kwp: 100.0
+    inclinazione_gradi: 15
+    azimut_gradi: 180
+    perdite_sistema_pct: 12.0
+    degradazione_annua_pct: 0.4
+
+pun:
+  zona_mercato: "CNOR"
+
+edificio:
+  tipologia: "industriale"
+  parametri:
+    superficie_mq: 2000
+    potenza_contratto_kw: 100.0
+    consumo_annuo_kwh: 250000
+
+batteria:
+  abilitata: true
+  specifiche:
+    capacita_nominale_kwh: 200.0
+    potenza_max_kw: 100.0
+    chimica: "LFP"
+  strategia: "ibrida"
+
+economico:
+  investimento:
+    costo_pv_eur: 120000
+    costo_batteria_eur: 80000
+    costo_installazione_eur: 25000
+    costo_progettazione_eur: 5000
+  parametri:
+    tasso_sconto_pct: 7.0
+    vita_utile_anni: 25

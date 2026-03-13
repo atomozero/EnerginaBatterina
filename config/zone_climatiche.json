@@ -1,0 +1,66 @@
+{
+  "zone": {
+    "A": {
+      "gradi_giorno_min": 0,
+      "gradi_giorno_max": 600,
+      "descrizione": "Zona molto calda",
+      "periodo_riscaldamento": {"dal": "12-01", "al": "03-15", "ore_max": 6},
+      "citta_esempio": ["Lampedusa", "Pantelleria"]
+    },
+    "B": {
+      "gradi_giorno_min": 601,
+      "gradi_giorno_max": 900,
+      "descrizione": "Zona calda",
+      "periodo_riscaldamento": {"dal": "12-01", "al": "03-31", "ore_max": 8},
+      "citta_esempio": ["Catania", "Palermo", "Agrigento"]
+    },
+    "C": {
+      "gradi_giorno_min": 901,
+      "gradi_giorno_max": 1400,
+      "descrizione": "Zona temperata calda",
+      "periodo_riscaldamento": {"dal": "11-15", "al": "03-31", "ore_max": 10},
+      "citta_esempio": ["Napoli", "Bari", "Cagliari", "Reggio Calabria"]
+    },
+    "D": {
+      "gradi_giorno_min": 1401,
+      "gradi_giorno_max": 2100,
+      "descrizione": "Zona temperata",
+      "periodo_riscaldamento": {"dal": "11-01", "al": "04-15", "ore_max": 12},
+      "citta_esempio": ["Roma", "Firenze", "Genova", "Ancona"]
+    },
+    "E": {
+      "gradi_giorno_min": 2101,
+      "gradi_giorno_max": 3000,
+      "descrizione": "Zona fredda",
+      "periodo_riscaldamento": {"dal": "10-15", "al": "04-15", "ore_max": 14},
+      "citta_esempio": ["Milano", "Torino", "Bologna", "Venezia", "Trento"]
+    },
+    "F": {
+      "gradi_giorno_min": 3001,
+      "gradi_giorno_max": 5000,
+      "descrizione": "Zona molto fredda",
+      "periodo_riscaldamento": {"dal": "10-01", "al": "04-30", "ore_max": 24},
+      "citta_esempio": ["Belluno", "Cuneo"]
+    }
+  },
+  "citta_gradi_giorno": {
+    "Roma": 1415,
+    "Milano": 2404,
+    "Torino": 2617,
+    "Napoli": 1034,
+    "Firenze": 1821,
+    "Bologna": 2259,
+    "Palermo": 751,
+    "Catania": 833,
+    "Bari": 1185,
+    "Genova": 1435,
+    "Venezia": 2345,
+    "Cagliari": 990,
+    "Trento": 2569,
+    "Ancona": 1688,
+    "Belluno": 3043,
+    "Cuneo": 3012,
+    "Lampedusa": 568,
+    "Reggio Calabria": 772
+  }
+}
