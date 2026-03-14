@@ -7,6 +7,7 @@ from energina.moduli.report.grafici import (
     grafico_autoconsumo_pie,
     grafico_bilancio_mensile,
     grafico_flussi_cassa,
+    grafico_heatmap_annuale,
     grafico_tornado,
 )
 from energina.moduli.report.template_pdf import genera_pdf
@@ -28,7 +29,10 @@ class ModuloReport(BaseModulo):
     """
 
     def get_dipendenze(self) -> list[str]:
-        return ["economico", "previsione", "sensibilita"]
+        return [
+            "meteo", "pun", "fotovoltaico", "edificio", "contatore",
+            "batteria", "incentivi", "economico", "previsione", "sensibilita",
+        ]
 
     def get_input_schema(self) -> dict:
         return {}
@@ -130,6 +134,17 @@ class ModuloReport(BaseModulo):
             p = grafico_tornado(tornado, npv_base, grafici_dir / "tornado.png")
             paths.append(p)
 
+        # Heatmap annuale (carpet plot 365x24)
+        serie_cont = contatore.get("serie_oraria", [])
+        serie_pv = pv.get("serie_oraria", [])
+        if len(serie_cont) >= 48:
+            p = grafico_heatmap_annuale(
+                serie_cont, serie_pv,
+                grafici_dir / "heatmap_annuale.png",
+            )
+            if p.exists():
+                paths.append(p)
+
         return paths
 
     def _costruisci_sezioni(
@@ -149,7 +164,7 @@ class ModuloReport(BaseModulo):
                 f"Consumo annuo: {riep_cont.get('consumo_annuo_kwh', 'N/D')} kWh",
                 f"Autoconsumo: {riep_cont.get('autoconsumo_pct', 'N/D')}%",
                 f"NPV: {riep_eco.get('npv_eur', 'N/D')} EUR",
-                f"IRR: {riep_eco.get('irr_pct', 'N/D')}%",
+                f"IRR: {riep_eco['irr_pct']}%" if riep_eco.get('irr_pct') is not None else "IRR: N/C",
                 f"Payback: {riep_eco.get('payback_semplice_anni', 'N/D')} anni",
             ],
         })
@@ -232,7 +247,7 @@ class ModuloReport(BaseModulo):
                 "righe": [
                     ["Indicatore", "Valore"],
                     ["NPV", f"{riep_eco.get('npv_eur', 'N/D')} EUR"],
-                    ["IRR", f"{riep_eco.get('irr_pct', 'N/D')}%"],
+                    ["IRR", f"{riep_eco['irr_pct']}%" if riep_eco.get('irr_pct') is not None else "N/C"],
                     ["Payback semplice", f"{riep_eco.get('payback_semplice_anni', 'N/D')} anni"],
                     ["Payback attualizzato", f"{riep_eco.get('payback_attualizzato_anni', 'N/D')} anni"],
                     ["ROI", f"{riep_eco.get('roi_pct', 'N/D')}%"],
