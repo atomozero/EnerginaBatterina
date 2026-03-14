@@ -1,7 +1,6 @@
 """Modello fotovoltaico basato su pvlib."""
 
 import numpy as np
-import pandas as pd
 
 from energina.core.logging_config import get_logger
 
@@ -70,6 +69,7 @@ def _simula_con_pvlib(
     perdite_pct, coeff_temp, noct, efficienza_inverter, anno,
 ):
     """Simulazione completa con pvlib."""
+    import pandas as pd
     import pvlib
 
     n_ore = len(ghi)

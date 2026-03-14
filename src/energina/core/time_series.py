@@ -1,12 +1,56 @@
 """Utility per gestione serie temporali orarie."""
 
+import calendar
 from datetime import datetime, timedelta
 
 import numpy as np
-import pandas as pd
+
+try:
+    import pandas as pd
+    HAS_PANDAS = True
+except ImportError:
+    HAS_PANDAS = False
 
 
-def genera_indice_orario(anno: int) -> pd.DatetimeIndex:
+class _SimpleTimestamp:
+    """Timestamp minimale come fallback senza pandas."""
+    def __init__(self, dt: datetime):
+        self._dt = dt
+
+    def isoformat(self):
+        return self._dt.isoformat()
+
+    def to_pydatetime(self):
+        return self._dt
+
+    @property
+    def hour(self):
+        return self._dt.hour
+
+    @property
+    def month(self):
+        return self._dt.month
+
+
+class _SimpleDatetimeIndex:
+    """DatetimeIndex minimale come fallback senza pandas."""
+    def __init__(self, timestamps: list[datetime]):
+        self._timestamps = timestamps
+        self._wrapped = [_SimpleTimestamp(dt) for dt in timestamps]
+
+    def __len__(self):
+        return len(self._timestamps)
+
+    def __iter__(self):
+        return iter(self._wrapped)
+
+    def __getitem__(self, key):
+        if isinstance(key, slice):
+            return _SimpleDatetimeIndex(self._timestamps[key])
+        return self._wrapped[key]
+
+
+def genera_indice_orario(anno: int):
     """Genera indice orario per un anno intero (8760 o 8784 ore).
 
     Args:
@@ -15,9 +59,14 @@ def genera_indice_orario(anno: int) -> pd.DatetimeIndex:
     Returns:
         DatetimeIndex con frequenza oraria.
     """
-    inizio = pd.Timestamp(f"{anno}-01-01 00:00:00")
-    fine = pd.Timestamp(f"{anno}-12-31 23:00:00")
-    return pd.date_range(start=inizio, end=fine, freq="h")
+    if HAS_PANDAS:
+        inizio = pd.Timestamp(f"{anno}-01-01 00:00:00")
+        fine = pd.Timestamp(f"{anno}-12-31 23:00:00")
+        return pd.date_range(start=inizio, end=fine, freq="h")
+    else:
+        n = ore_anno(anno)
+        base = datetime(anno, 1, 1)
+        return _SimpleDatetimeIndex([base + timedelta(hours=i) for i in range(n)])
 
 
 def ore_anno(anno: int) -> int:
@@ -58,7 +107,7 @@ def fascia_oraria(ora: int, feriale: bool) -> str:
 
 
 def serie_a_lista_dicts(
-    indice: pd.DatetimeIndex, **colonne: np.ndarray
+    indice, **colonne: np.ndarray
 ) -> list[dict]:
     """Converte serie orarie in lista di dizionari per output JSON.
 
@@ -94,7 +143,19 @@ def raggruppa_mensile(valori_orari: np.ndarray, anno: int) -> list[float]:
     Returns:
         Lista di 12 valori (uno per mese).
     """
-    indice = genera_indice_orario(anno)
-    serie = pd.Series(valori_orari, index=indice)
-    mensili = serie.resample("ME").sum()
-    return [round(float(v), 2) for v in mensili.values]
+    if HAS_PANDAS:
+        indice = genera_indice_orario(anno)
+        serie = pd.Series(valori_orari[:len(indice)], index=indice)
+        mensili = serie.resample("ME").sum()
+        return [round(float(v), 2) for v in mensili.values]
+    else:
+        # Fallback senza pandas
+        mensili = []
+        idx = 0
+        for mese in range(1, 13):
+            giorni = calendar.monthrange(anno, mese)[1]
+            ore_mese = giorni * 24
+            fine = min(idx + ore_mese, len(valori_orari))
+            mensili.append(round(float(np.sum(valori_orari[idx:fine])), 2))
+            idx = fine
+        return mensili

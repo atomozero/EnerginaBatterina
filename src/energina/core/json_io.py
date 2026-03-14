@@ -4,9 +4,13 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-from jsonschema import ValidationError, validate
-
 from energina.core.exceptions import InputValidationError, OutputValidationError
+
+try:
+    from jsonschema import ValidationError, validate
+    HAS_JSONSCHEMA = True
+except ImportError:
+    HAS_JSONSCHEMA = False
 from energina.core.logging_config import get_logger
 
 logger = get_logger("json_io")
@@ -74,6 +78,10 @@ def valida_schema(dati: dict, schema: dict, modulo: str, direzione: str = "outpu
         InputValidationError: Se validazione input fallisce.
         OutputValidationError: Se validazione output fallisce.
     """
+    if not HAS_JSONSCHEMA:
+        logger.debug("jsonschema non disponibile, validazione saltata")
+        return
+
     try:
         validate(instance=dati, schema=schema)
     except ValidationError as e:

@@ -1,7 +1,6 @@
 """Modulo PUN - Prezzi energia elettrica mercato italiano."""
 
 import numpy as np
-import pandas as pd
 
 from energina.core.base_modulo import BaseModulo
 from energina.core.time_series import (
@@ -52,12 +51,13 @@ class ModuloPUN(BaseModulo):
         prezzo_min_vendita = tariffa_ven.get("prezzo_minimo_garantito_eur_kwh", 0.04)
 
         # Tenta scaricamento da GME, fallback sintetico
-        df_prezzi = self._ottieni_prezzi(anno, zona)
+        dati_prezzi = self._ottieni_prezzi(anno, zona)
+        pun = dati_prezzi["pun_eur_mwh"]
 
         indice = genera_indice_orario(anno)
-        n_ore = min(len(indice), len(df_prezzi))
+        n_ore = min(len(indice), len(pun))
         indice = indice[:n_ore]
-        pun = df_prezzi["pun_eur_mwh"].values[:n_ore]
+        pun = pun[:n_ore]
 
         # Calcola prezzi acquisto e vendita
         pun_kwh = pun / 1000.0  # EUR/MWh -> EUR/kWh
@@ -75,7 +75,7 @@ class ModuloPUN(BaseModulo):
         # Fasce orarie
         fasce = []
         for ts in indice:
-            dt = ts.to_pydatetime()
+            dt = ts.to_pydatetime() if hasattr(ts, 'to_pydatetime') else ts._dt
             fasce.append(fascia_oraria(dt.hour, is_feriale(dt)))
 
         fasce_arr = np.array(fasce)
@@ -117,28 +117,30 @@ class ModuloPUN(BaseModulo):
             },
         }
 
-    def _ottieni_prezzi(self, anno: int, zona: str) -> pd.DataFrame:
+    def _ottieni_prezzi(self, anno: int, zona: str) -> dict:
         """Ottieni prezzi PUN: cache -> GME -> sintetico."""
-        cache_dir = self.exchange_dir.parent / "cache"
+        # Per ora, fallback diretto a sintetico (evita dipendenze pandas)
+        try:
+            cache_dir = self.exchange_dir.parent / "cache"
+            from energina.moduli.pun.pun_cache import carica_cache
+            df = carica_cache(cache_dir, anno, zona)
+            if df is not None:
+                return {"pun_eur_mwh": df["pun_eur_mwh"].values}
+        except Exception:
+            pass
 
-        # 1. Cache
-        from energina.moduli.pun.pun_cache import carica_cache, salva_cache
-        df = carica_cache(cache_dir, anno, zona)
-        if df is not None:
-            return df
+        try:
+            from energina.moduli.pun.gme_client import scarica_prezzi_gme
+            df = scarica_prezzi_gme(anno, zona)
+            if df is not None:
+                return {"pun_eur_mwh": df["pun_eur_mwh"].values}
+        except Exception:
+            pass
 
-        # 2. GME
-        from energina.moduli.pun.gme_client import scarica_prezzi_gme
-        df = scarica_prezzi_gme(anno, zona)
-        if df is not None and not df.empty:
-            salva_cache(df, cache_dir, anno, zona)
-            return df
-
-        # 3. Fallback sintetico
         self.logger.warning("Generazione prezzi PUN sintetici")
         return self._genera_sintetico(anno)
 
-    def _genera_sintetico(self, anno: int) -> pd.DataFrame:
+    def _genera_sintetico(self, anno: int) -> dict:
         """Genera prezzi PUN sintetici realistici."""
         n_ore = 8760
         ore = np.arange(n_ore)
@@ -157,12 +159,7 @@ class ModuloPUN(BaseModulo):
         ])
 
         pun = base * profilo_orario[ora_giorno]
-        # Aggiungi rumore
         pun += np.random.normal(0, 10, n_ore)
         pun = np.clip(pun, 20, 500)
 
-        indice = genera_indice_orario(anno)[:n_ore]
-        return pd.DataFrame({
-            "timestamp": indice,
-            "pun_eur_mwh": pun,
-        })
+        return {"pun_eur_mwh": pun}

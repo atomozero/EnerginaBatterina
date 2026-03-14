@@ -4,7 +4,6 @@ import json
 from pathlib import Path
 
 import numpy as np
-import pandas as pd
 
 from energina.core.logging_config import get_logger
 from energina.core.time_series import genera_indice_orario, is_feriale
