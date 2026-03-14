@@ -77,7 +77,9 @@ def cmd_run(args):
         if "economico" in risultati:
             ind = risultati["economico"].get("indicatori", {})
             print(f"\n  NPV:                 {ind.get('npv_eur', 'N/D'):>10} EUR")
-            print(f"  IRR:                 {ind.get('irr_pct', 'N/D'):>10}%")
+            irr = ind.get('irr_pct')
+            irr_str = f"{irr}%" if irr is not None else "N/C"
+            print(f"  IRR:                 {irr_str:>10}")
             print(f"  Payback:             {ind.get('payback_semplice_anni', 'N/D'):>10} anni")
             print(f"  ROI:                 {ind.get('roi_pct', 'N/D'):>10}%")
             print(f"  LCOE:                {ind.get('lcoe_eur_kwh', 'N/D'):>10} EUR/kWh")

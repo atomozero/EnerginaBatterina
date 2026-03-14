@@ -17,7 +17,7 @@ class ModuloSensibilita(BaseModulo):
     """
 
     def get_dipendenze(self) -> list[str]:
-        return ["economico"]
+        return ["economico", "incentivi", "contatore", "fotovoltaico"]
 
     def get_input_schema(self) -> dict:
         return {}
@@ -117,6 +117,18 @@ class ModuloSensibilita(BaseModulo):
             {"anno": i, "incentivo_totale_eur": 0} for i in range(1, 26)
         ])
 
+        # Dati reali da moduli upstream
+        pv_data = self._input_dati.get("fotovoltaico", {})
+        cont_data = self._input_dati.get("contatore", {})
+        potenza_kwp = pv_data.get("metadata", {}).get("potenza_nominale_kwp", 6.0)
+        capacita_kwh = cfg_inv.get("capacita_batteria_kwh", 10.0)
+        # Prova anche dalla config batteria
+        cfg_batt = self.config.get("modulo", self.config.get("batteria", {}))
+        if isinstance(cfg_batt, dict):
+            spec_batt = cfg_batt.get("specifiche", {})
+            if spec_batt.get("capacita_nominale_kwh"):
+                capacita_kwh = spec_batt["capacita_nominale_kwh"]
+
         return {
             "investimento_totale": meta.get("investimento_totale_eur", 17500),
             "risparmio_autoconsumo": indicatori.get("risparmio_autoconsumo_anno1_eur", 0),
@@ -132,10 +144,11 @@ class ModuloSensibilita(BaseModulo):
             "costo_batteria": costo_batt,
             "costo_installazione": costo_inst,
             "costo_altro": costo_batt + costo_inst,
-            "costo_pv_per_kwp": costo_pv / 6.0,  # stima
-            "costo_batt_per_kwh": costo_batt / 10.0,
+            "costo_pv_per_kwp": costo_pv / potenza_kwp if potenza_kwp > 0 else 1500,
+            "costo_batt_per_kwh": costo_batt / capacita_kwh if capacita_kwh > 0 else 600,
             "prezzo_energia_base": 0.25,
-            "potenza_base_kwp": 6.0,
+            "potenza_base_kwp": potenza_kwp,
+            "capacita_base_kwh": capacita_kwh,
         }
 
     def _get_valore_base(self, nome: str, flussi_base: dict) -> float:
@@ -145,5 +158,7 @@ class ModuloSensibilita(BaseModulo):
             "costo_batteria_eur": flussi_base.get("costo_batteria", 6000),
             "prezzo_energia": flussi_base.get("prezzo_energia_base", 0.25),
             "tasso_sconto": flussi_base.get("tasso_sconto", 0.05) * 100,
+            "potenza_nominale_kwp": flussi_base.get("potenza_base_kwp", 6.0),
+            "capacita_nominale_kwh": flussi_base.get("capacita_base_kwh", 10.0),
         }
         return mapping.get(nome, 1.0)

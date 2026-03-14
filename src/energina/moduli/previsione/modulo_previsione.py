@@ -14,7 +14,7 @@ class ModuloPrevisione(BaseModulo):
     """
 
     def get_dipendenze(self) -> list[str]:
-        return ["economico"]
+        return ["economico", "pun", "contatore", "fotovoltaico"]
 
     def get_input_schema(self) -> dict:
         return {}
