@@ -95,7 +95,7 @@ def genera_consumo_base(
         else:
             fattore_ora = prof_festivo[ora]
 
-        consumo[i] = consumo_giornaliero_medio * fattore_mese * fattore_ora * 24
+        consumo[i] = consumo_giornaliero_medio * fattore_mese * fattore_ora
 
     # Aggiungi rumore realistico (+-5%)
     rumore = 1 + np.random.normal(0, 0.05, n_ore)

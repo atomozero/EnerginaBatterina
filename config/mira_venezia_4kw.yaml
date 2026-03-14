@@ -46,11 +46,10 @@ edificio:
     superficie_mq: 100
     n_occupanti: 3
     potenza_contratto_kw: 3.0
+    consumo_annuo_kwh: 4000
   climatizzazione:
-    riscaldamento: "pompa_di_calore"
-    raffrescamento: true
-    cop_medio: 3.5
-    eer_medio: 3.0
+    riscaldamento: "gas"
+    raffrescamento: false
 
 contatore:
   tipo: "bidirezionale"
