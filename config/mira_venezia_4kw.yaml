@@ -1,0 +1,124 @@
+progetto:
+  nome: "Impianto Residenziale Mira (VE)"
+  descrizione: "Famiglia 3 persone, PV 4kWp + batteria 10kWh"
+  anno_riferimento: 2024
+
+meteo:
+  localita:
+    latitudine: 45.4328
+    longitudine: 12.1300
+    altitudine: 5
+    nome: "Mira"
+  sorgente_dati: "sintetico"
+  anno: 2023
+
+fotovoltaico:
+  impianto:
+    potenza_nominale_kwp: 4.0
+    inclinazione_gradi: 30
+    azimut_gradi: 180
+    perdite_sistema_pct: 14.0
+    degradazione_annua_pct: 0.5
+  modulo:
+    tipo: "monocristallino"
+    potenza_wp: 400
+    efficienza_pct: 20.5
+    coeff_temp_pmax_pct_c: -0.35
+    noct_c: 45
+  inverter:
+    efficienza_nominale_pct: 97.0
+
+pun:
+  zona_mercato: "NORD"
+  anno: 2024
+  tariffa_acquisto:
+    tipo: "pun_indicizzata"
+    oneri_sistema_eur_kwh: 0.08
+    accise_eur_kwh: 0.0227
+    iva_pct: 10.0
+  tariffa_vendita:
+    tipo: "ritiro_dedicato"
+    prezzo_minimo_garantito_eur_kwh: 0.04
+
+edificio:
+  tipologia: "residenziale"
+  parametri:
+    superficie_mq: 100
+    n_occupanti: 3
+    potenza_contratto_kw: 3.0
+  climatizzazione:
+    riscaldamento: "pompa_di_calore"
+    raffrescamento: true
+    cop_medio: 3.5
+    eer_medio: 3.0
+
+contatore:
+  tipo: "bidirezionale"
+
+batteria:
+  abilitata: true
+  specifiche:
+    capacita_nominale_kwh: 10.0
+    potenza_max_kw: 5.0
+    soc_min_pct: 10.0
+    soc_max_pct: 90.0
+    efficienza_carica_pct: 95.0
+    efficienza_scarica_pct: 95.0
+    chimica: "LFP"
+  strategia: "autoconsumo"
+  degradazione:
+    modello: "lineare"
+    cicli_vita: 6000
+    capacita_fine_vita_pct: 80.0
+
+incentivi:
+  detrazione_fiscale:
+    abilitata: true
+    aliquota_pct: 50.0
+    anni_detrazione: 10
+    tetto_spesa_eur: 96000
+  ritiro_dedicato:
+    abilitato: true
+  cer:
+    abilitata: false
+
+economico:
+  investimento:
+    costo_pv_eur: 6000
+    costo_batteria_eur: 6000
+    costo_installazione_eur: 1500
+    costo_progettazione_eur: 500
+  costi_esercizio:
+    manutenzione_annua_eur: 150
+    assicurazione_annua_eur: 80
+    sostituzione_inverter_anno: 12
+    costo_inverter_eur: 1200
+  parametri:
+    tasso_sconto_pct: 5.0
+    vita_utile_anni: 25
+    inflazione_pct: 2.0
+    escalation_prezzo_energia_pct: 3.0
+
+previsione:
+  orizzonte_anni: 25
+  metodo_prezzi: "trend_lineare"
+  metodo_produzione: "degradazione"
+
+sensibilita:
+  variabili:
+    - nome: "costo_pv_eur"
+      min_pct: -20
+      max_pct: 20
+      passi: 5
+    - nome: "prezzo_energia"
+      min_pct: -20
+      max_pct: 40
+      passi: 5
+    - nome: "potenza_nominale_kwp"
+      valori: [3.0, 4.0, 6.0, 9.0]
+    - nome: "capacita_nominale_kwh"
+      valori: [0, 5.0, 10.0, 15.0]
+
+report:
+  formato: "pdf"
+  lingua: "it"
